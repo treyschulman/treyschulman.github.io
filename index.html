@@ -16,18 +16,18 @@
         }
         .header img {
             vertical-align: middle;
-            width: 150px;
+            width: 200px;
             height: 150px;
         }
         .header h1 {
             display: inline;
             margin-left: 10px;
-            font-size: 4em;
+            font-size: 5em;
         }
         .subtitle {
             text-align: center;
-            font-size: 1.5em;
-            margin: 10px 0;
+            font-size: 2em;
+            margin: 10px;
         }
         .chart-container {
             display: flex;
@@ -37,7 +37,7 @@
         }
         .chart {
             width: 80%;
-            height: 80%;
+            height: 90%;
         }
         .navigation {
             text-align: center;
@@ -50,7 +50,7 @@
             padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 2em;
         }
         .navigation select {
             background-color: #da291c;
@@ -58,7 +58,7 @@
             border: none;
             padding: 10px 20px;
             margin: 5px;
-            font-size: 1em;
+            font-size: 2em;
             cursor: pointer;
         }
     </style>
@@ -87,11 +87,11 @@
     <script>
         const dataUrl = '/data/mcdonalds.csv';
         const slides = [
-            { metric: 'Calories', label: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.', yAxisLabel: 'Calories' },
+            { metric: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.', yAxisLabel: 'Calories' },
             { metric: 'Fat', subtitle: 'Fat is bad for you.', yAxisLabel: 'Fat (g)' },
             { metric: 'Carbohydrates', subtitle: 'Carbs are bad for you.', yAxisLabel: 'Carbs (g)' },
             { metric: 'Protein', subtitle: 'Protein is good for you.', yAxisLabel: 'Protein (g)' },
-            { metric: 'dropdown',  subtitle: 'Explore each nutritional metric for the sandwiches.', yAxisLabel: '' }
+            { metric: 'dropdown',  subtitle: 'Explore each nutritional metric for the sandwiches.'}
         ];
         let currentSlide = 0;
         
@@ -113,7 +113,7 @@
         
         const xLabel = chart.append('text')
             .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 10})`)
-            .attr('dx', '2em')
+            .style('font-size', '2em')
             .style('text-anchor', 'middle')
             .text("McDonald's Sandwiches");
         
@@ -122,6 +122,7 @@
             .attr('y', 0 - margin.left)
             .attr('x', 0 - (height / 2))
             .attr('dy', '2em')
+            .style('font-size', '2em')
             .style('text-anchor', 'middle');
 
         // Function to update the chart based on the selected metric
@@ -134,10 +135,10 @@
                 x.domain(data.map(d => d.food));
                 y.domain([0, d3.max(data, d => d[metric])]);
                 
-                xAxis.call(d3.axisBottom(x).tickSize(0)).selectAll("text")
+                xAxis.call(d3.axisBottom(x).tickSize(2)).selectAll("text")
                     .attr("transform", "translate(-10,0)")
                     .style("text-anchor", "end");
-                yAxis.call(d3.axisLeft(y));
+                yAxis.call(d3.axisLeft(y).tickSize(2));
                 
                 const bars = chart.selectAll('.bar')
                     .data(data, d => d.food);
