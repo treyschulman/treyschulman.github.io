@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nutritional Value of McDonald's Sandwiches</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffc72c;
+            color: #da291c;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+        }
+        .header img {
+            vertical-align: middle;
+            width: 100px;
+            height: auto;
+        }
+        .header h1 {
+            display: inline;
+            margin-left: 10px;
+            font-size: 2em;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+        }
+        .chart {
+            width: 80%;
+        }
+        .navigation {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .navigation button {
+            background-color: #da291c;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .navigation select {
+            background-color: #da291c;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/McDonald's_logo.svg" alt="McDonald's Logo">
+        <h1>Nutritional Value of McDonald's Sandwiches</h1>
+    </div>
+    <div class="subtitle" id="subtitle">Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.</div>
+    <div class="navigation">
+        <select id="metric" style="display: none;">
+            <option value="Calories">Calories</option>
+            <option value="Fat">Fat</option>
+            <option value="Carbohydrates">Carbs</option>
+            <option value="Protein">Protein</option>
+        </select>
+    </div>
+    <div class="chart-container">
+        <svg class="chart"></svg>
+    </div>
+    <div class="navigation">
+        <button id="prev" style="display: none;">Previous</button>
+        <button id="next">Next</button>
+    </div>
+    <script>
+        const dataUrl = '/mnt/data/mcdonalds.csv';
+        const slides = [
+            { metric: 'Calories', label: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.' },
+            { metric: 'Fat', label: 'Fat (g)', subtitle: 'Fat is bad for you.' },
+            { metric: 'Carbohydrates', label: 'Carbs (g)', subtitle: 'Carbs are bad for you.' },
+            { metric: 'Protein', label: 'Protein (g)', subtitle: 'Protein is good for you.' },
+            { metric: 'dropdown', label: '', subtitle: 'Explore each nutritional metric for the sandwiches.' }
+        ];
+        let currentSlide = 0;
+        
+        const svg = d3.select('.chart');
+        const margin = { top: 20, right: 20, bottom: 50, left: 60 };
+        const width = parseInt(svg.style('width')) - margin.left - margin.right;
+        const height = parseInt(svg.style('height')) - margin.top - margin.bottom;
+        
+        const chart = svg.append('g')
+            .attr('transform', `translate(${margin.left},${margin.top})`);
+        
+        const x = d3.scaleBand().range([0, width]).padding(0.1);
+        const y = d3.scaleLinear().range([height, 0]);
+        
+        const xAxis = chart.append('g')
+            .attr('transform', `translate(0,${height})`);
+        
+        const yAxis = chart.append('g');
+        
+        const updateChart = (metric) => {
+            d3.csv(dataUrl).then(data => {
+                data.forEach(d => {
+                    d[metric] = +d[metric];
+                });
+                
+                x.domain(data.map(d => d.food));
+                y.domain([0, d3.max(data, d => d[metric])]);
+                
+                xAxis.call(d3.axisBottom(x).tickSize(0)).selectAll("text")
+                    .attr("transform", "translate(-10,0)rotate(-45)")
+                    .style("text-anchor", "end");
+                yAxis.call(d3.axisLeft(y));
+                
+                const bars = chart.selectAll('.bar')
+                    .data(data, d => d.food);
+                
+                bars.exit().remove();
+                
+                bars.enter().append('rect')
+                    .attr('class', 'bar')
+                    .attr('x', d => x(d.food))
+                    .attr('width', x.bandwidth())
+                    .attr('y', height)
+                    .attr('height', 0)
+                    .merge(bars)
+                    .transition()
+                    .duration(750)
+                    .attr('y', d => y(d[metric]))
+                    .attr('height', d => height - y(d[metric]))
+                    .attr('fill', '#da291c');
+            });
+        };
+        
+        const showSlide = (index) => {
+            currentSlide = index;
+            const slide = slides[currentSlide];
+            
+            if (currentSlide === 0) {
+                d3.select('#prev').style('display', 'none');
+            } else {
+                d3.select('#prev').style('display', 'inline');
+            }
+            
+            if (currentSlide === slides.length - 1) {
+                d3.select('#next').style('display', 'none');
+                d3.select('#metric').style('display', 'inline');
+            } else {
+                d3.select('#next').style('display', 'inline');
+                d3.select('#metric').style('display', 'none');
+            }
+            
+            if (slide.metric === 'dropdown') {
+                const selectedMetric = d3.select('#metric').property('value');
+                updateChart(selectedMetric);
+                d3.select('#subtitle').text(slide.subtitle);
+                d3.select('#metric').on('change', function() {
+                    updateChart(this.value);
+                });
+            } else {
+                updateChart(slide.metric);
+                d3.select('#subtitle').text(slide.subtitle);
+                d3.select('#metric').on('change', null);
+            }
+        };
+        
+        d3.select('#prev').on('click', () => {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        });
+        
+        d3.select('#next').on('click', () => {
+            if (currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+        });
+        
+        showSlide(0);
+    </script>
+</body>
+</html>
