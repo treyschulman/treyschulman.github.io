@@ -33,7 +33,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 500px;
+            height: 1500px;
         }
         .chart {
             width: 80%;
@@ -84,13 +84,13 @@
         <button id="next">Next</button>
     </div>
     <script>
-        const dataUrl = 'mcdonalds.csv';
+        const dataUrl = '/data/mcdonalds.csv';
         const slides = [
-            { metric: 'Calories', label: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.' },
-            { metric: 'Fat', label: 'Fat (g)', subtitle: 'Fat is bad for you.' },
-            { metric: 'Carbohydrates', label: 'Carbs (g)', subtitle: 'Carbs are bad for you.' },
-            { metric: 'Protein', label: 'Protein (g)', subtitle: 'Protein is good for you.' },
-            { metric: 'dropdown', label: '', subtitle: 'Explore each nutritional metric for the sandwiches.' }
+            { metric: 'Calories', label: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.', yAxisLabel: 'Calories' },
+            { metric: 'Fat', label: 'Fat (g)', subtitle: 'Fat is bad for you.', yAxisLabel: 'Fat (g)' },
+            { metric: 'Carbohydrates', label: 'Carbs (g)', subtitle: 'Carbs are bad for you.', yAxisLabel: 'Carbs (g)' },
+            { metric: 'Protein', label: 'Protein (g)', subtitle: 'Protein is good for you.', yAxisLabel: 'Protein (g)' },
+            { metric: 'dropdown', label: '', subtitle: 'Explore each nutritional metric for the sandwiches.', yAxisLabel: '' }
         ];
         let currentSlide = 0;
         
@@ -110,6 +110,19 @@
         
         const yAxis = chart.append('g');
         
+        const xLabel = chart.append('text')
+            .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 10})`)
+            .style('text-anchor', 'middle')
+            .text("McDonald's Sandwiches");
+        
+        const yLabel = chart.append('text')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 0 - margin.left)
+            .attr('x', 0 - (height / 2))
+            .attr('dy', '1em')
+            .style('text-anchor', 'middle');
+
+        // Function to update the chart based on the selected metric
         const updateChart = (metric) => {
             d3.csv(dataUrl).then(data => {
                 data.forEach(d => {
@@ -144,10 +157,12 @@
             });
         };
         
+        // Function to display a slide based on the index
         const showSlide = (index) => {
             currentSlide = index;
             const slide = slides[currentSlide];
             
+            // Hide/Show buttons based on the slide index
             if (currentSlide === 0) {
                 d3.select('#prev').style('display', 'none');
             } else {
@@ -162,20 +177,25 @@
                 d3.select('#metric').style('display', 'none');
             }
             
+            // Update the chart based on the current slide
             if (slide.metric === 'dropdown') {
                 const selectedMetric = d3.select('#metric').property('value');
                 updateChart(selectedMetric);
                 d3.select('#subtitle').text(slide.subtitle);
                 d3.select('#metric').on('change', function() {
                     updateChart(this.value);
+                    yLabel.text(this.value === 'Calories' ? 'Calories' : this.value === 'Fat' ? 'Fat (g)' : this.value === 'Carbohydrates' ? 'Carbs (g)' : 'Protein (g)');
                 });
+                yLabel.text(selectedMetric === 'Calories' ? 'Calories' : selectedMetric === 'Fat' ? 'Fat (g)' : selectedMetric === 'Carbohydrates' ? 'Carbs (g)' : 'Protein (g)');
             } else {
                 updateChart(slide.metric);
                 d3.select('#subtitle').text(slide.subtitle);
+                yLabel.text(slide.yAxisLabel);
                 d3.select('#metric').on('change', null);
             }
         };
         
+        // Event listeners for navigation buttons
         d3.select('#prev').on('click', () => {
             if (currentSlide > 0) {
                 showSlide(currentSlide - 1);
@@ -188,6 +208,7 @@
             }
         });
         
+        // Initial display of the first slide
         showSlide(0);
     </script>
 </body>
