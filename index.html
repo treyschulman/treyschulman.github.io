@@ -16,8 +16,8 @@
         }
         .header img {
             vertical-align: middle;
-            width: 100px;
-            height: auto;
+            width: 150px;
+            height: 150px;
         }
         .header h1 {
             display: inline;
@@ -26,7 +26,7 @@
         }
         .subtitle {
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.5em;
             margin: 10px 0;
         }
         .chart-container {
@@ -113,6 +113,7 @@
         
         const xLabel = chart.append('text')
             .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 10})`)
+            .attr('dx', '2em')
             .style('text-anchor', 'middle')
             .text("McDonald's Sandwiches");
         
@@ -120,7 +121,7 @@
             .attr('transform', 'rotate(-90)')
             .attr('y', 0 - margin.left)
             .attr('x', 0 - (height / 2))
-            .attr('dy', '1em')
+            .attr('dy', '2em')
             .style('text-anchor', 'middle');
 
         // Function to update the chart based on the selected metric
