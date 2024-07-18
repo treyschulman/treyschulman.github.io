@@ -33,10 +33,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 1500px;
         }
         .chart {
             width: 80%;
+            height: 70%;
         }
         .navigation {
             text-align: center;
@@ -64,7 +64,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5f/McDonald's_logo.svg" alt="McDonald's Logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/McDonald%27s_logo.svg" alt="McDonald's Logo">
         <h1>Nutritional Value of McDonald's Sandwiches</h1>
     </div>
     <div class="subtitle" id="subtitle">Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.</div>
@@ -87,10 +87,10 @@
         const dataUrl = '/data/mcdonalds.csv';
         const slides = [
             { metric: 'Calories', label: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.', yAxisLabel: 'Calories' },
-            { metric: 'Fat', label: 'Fat (g)', subtitle: 'Fat is bad for you.', yAxisLabel: 'Fat (g)' },
-            { metric: 'Carbohydrates', label: 'Carbs (g)', subtitle: 'Carbs are bad for you.', yAxisLabel: 'Carbs (g)' },
-            { metric: 'Protein', label: 'Protein (g)', subtitle: 'Protein is good for you.', yAxisLabel: 'Protein (g)' },
-            { metric: 'dropdown', label: '', subtitle: 'Explore each nutritional metric for the sandwiches.', yAxisLabel: '' }
+            { metric: 'Fat', subtitle: 'Fat is bad for you.', yAxisLabel: 'Fat (g)' },
+            { metric: 'Carbohydrates', subtitle: 'Carbs are bad for you.', yAxisLabel: 'Carbs (g)' },
+            { metric: 'Protein', subtitle: 'Protein is good for you.', yAxisLabel: 'Protein (g)' },
+            { metric: 'dropdown',  subtitle: 'Explore each nutritional metric for the sandwiches.', yAxisLabel: '' }
         ];
         let currentSlide = 0;
         
@@ -133,7 +133,7 @@
                 y.domain([0, d3.max(data, d => d[metric])]);
                 
                 xAxis.call(d3.axisBottom(x).tickSize(0)).selectAll("text")
-                    .attr("transform", "translate(-10,0)rotate(-45)")
+                    .attr("transform", "translate(-10,0)")
                     .style("text-anchor", "end");
                 yAxis.call(d3.axisLeft(y));
                 
