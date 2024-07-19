@@ -22,18 +22,18 @@
         .header h1 {
             display: inline;
             margin-left: 10px;
-            font-size: 5em;
+            font-size: 4em;
         }
         .subtitle {
             text-align: center;
-            font-size: 2em;
+            font-size: 1.5em;
             margin: 10px;
         }
         .chart-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 1000px;
+            height: 800px;
         }
         .chart {
             width: 80%;
@@ -50,7 +50,7 @@
             padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
-            font-size: 2em;
+            font-size: 1.5em;
         }
         .navigation select {
             background-color: #da291c;
@@ -58,7 +58,7 @@
             border: none;
             padding: 10px 20px;
             margin: 5px;
-            font-size: 2em;
+            font-size: 1.5em;
             cursor: pointer;
         }
     </style>
@@ -113,7 +113,7 @@
         
         const xLabel = chart.append('text')
             .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 10})`)
-            .style('font-size', '2em')
+            .style('font-size', '1em')
             .style('text-anchor', 'middle')
             .text("McDonald's Sandwiches");
         
@@ -121,8 +121,8 @@
             .attr('transform', 'rotate(-90)')
             .attr('y', 0 - margin.left)
             .attr('x', 0 - (height / 2))
-            .attr('dy', '2em')
-            .style('font-size', '2em')
+            .attr('dy', '1em')
+            .style('font-size', '1em')
             .style('text-anchor', 'middle');
 
         // Function to update the chart based on the selected metric
