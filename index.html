@@ -138,8 +138,7 @@
                     .attr("transform", "translate(-10,0)")
                     .style("font-size", "0.25em")
                     .style("text-anchor", "end");
-                yAxis.call(d3.axisLeft(y).tickSize(2)).selectAll("text")
-                     style("font-size", "0.25em");
+                yAxis.call(d3.axisLeft(y).tickSize(2))
                 
                 const bars = chart.selectAll('.bar')
                     .data(data, d => d.food);
