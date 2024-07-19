@@ -85,13 +85,12 @@
         <button id="next">Next</button>
     </div>
     <script>
-        const dataUrl = '/data/mcdonalds.csv';
         const slides = [
-            { metric: 'Calories', subtitle: 'Calories are a standard unit for measuring energy. The recommended number of calories consumed in a day is 2,000-2,500.', yAxisLabel: 'Calories' },
-            { metric: 'Fat', subtitle: 'Fat is bad for you.', yAxisLabel: 'Fat (g)' },
-            { metric: 'Carbohydrates', subtitle: 'Carbs are bad for you.', yAxisLabel: 'Carbs (g)' },
-            { metric: 'Protein', subtitle: 'Protein is good for you.', yAxisLabel: 'Protein (g)' },
-            { metric: 'dropdown',  subtitle: 'Explore each nutritional metric for the sandwiches.'}
+            { metric: 'Calories', subtitle: 'Calories are a measure of the amount of energy that food provides when consumed. The recommended daily caloric intake is between 2,000 and 2,500 calories, depending on age, sex, and physical activity level.', yAxisLabel: 'Calories' },
+            { metric: 'Fat', subtitle: 'Fat is an essential nutrient that provides energy and supports cell growth, but consuming too much can lead to health problems like heart disease and obesity. The recommended daily intake of fat for an average adult is 70 grams.', yAxisLabel: 'Fat (g)' },
+            { metric: 'Carbohydrates', subtitle: 'Carbs are a primary source of energty, but consuming excessive amounts can lead to weight gain. The general recommendation for daily carb intake is 225 to 325 grams.', yAxisLabel: 'Carbs (g)' },
+            { metric: 'Protein', subtitle: 'Protein is essential for building and repairing tissues, which makes it a vital nutrient. Aiming for a daily intake of 50 to 175 grams of protein can support muscle growth and overall health ', yAxisLabel: 'Protein (g)' },
+            { metric: 'dropdown',  subtitle: 'Explore each nutritional metric for the sandwiches!'}
         ];
         let currentSlide = 0;
         
@@ -127,7 +126,7 @@
 
         // Function to update the chart based on the selected metric
         const updateChart = (metric) => {
-            d3.csv(dataUrl).then(data => {
+            d3.csv('/data/mcdonalds.csv').then(data => {
                 data.forEach(d => {
                     d[metric] = +d[metric];
                 });
@@ -172,7 +171,7 @@
                 d3.select('#prev').style('display', 'inline');
             }
             
-            if (currentSlide === slides.length - 1) {
+            if (currentSlide === 4) {
                 d3.select('#next').style('display', 'none');
                 d3.select('#metric').style('display', 'inline');
             } else {
@@ -200,15 +199,11 @@
         
         // Event listeners for navigation buttons
         d3.select('#prev').on('click', () => {
-            if (currentSlide > 0) {
-                showSlide(currentSlide - 1);
-            }
+            showSlide(currentSlide - 1);
         });
         
         d3.select('#next').on('click', () => {
-            if (currentSlide < slides.length - 1) {
-                showSlide(currentSlide + 1);
-            }
+            showSlide(currentSlide + 1);
         });
         
         // Initial display of the first slide
