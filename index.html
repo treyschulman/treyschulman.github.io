@@ -27,7 +27,7 @@
         .subtitle {
             text-align: center;
             font-size: 1.5em;
-            margin: 10px;
+            margin: 10px 30px;
         }
         .chart-container {
             display: flex;
@@ -102,7 +102,11 @@
         const chart = svg.append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
         
-        const x = d3.scaleBand().range([0, width]).padding(0.1);
+        const x = d3.scaleBand()
+            .domain(['Sausage McMuffin', 'McChicken', 'Egg McMuffin', 'Cheeseburger',
+                     'Quarter Pounder', 'Big Mac', 'Filet O Fish '])
+            .range([0, width]).padding(0.1);
+
         const y = d3.scaleLinear().range([height, 0]);
         
         const xAxis = chart.append('g')
@@ -111,7 +115,7 @@
         const yAxis = chart.append('g');
         
         const xLabel = chart.append('text')
-            .attr('transform', `translate(${width / 2}, ${height + margin.bottom - 10})`)
+            .attr('transform', `translate(${width / 2}, ${height + 40})`)
             .style('font-size', '1em')
             .style('text-anchor', 'middle')
             .text("McDonald's Sandwiches");
@@ -131,7 +135,6 @@
                     d[metric] = +d[metric];
                 });
                 
-                x.domain(data.map(d => d.food));
                 y.domain([0, d3.max(data, d => d[metric])]);
                 
                 xAxis.call(d3.axisBottom(x).tickSize(2)).selectAll("text")
@@ -159,6 +162,19 @@
             });
         };
         
+        const getYLabel = (metric) => {
+            switch(metric) {
+                case 'Calories':
+                    return 'Calories';
+                case 'Fat':
+                    return 'Fat (g)';
+                case 'Carbohydrates':
+                    return 'Carbs (g)';
+                case 'Protein':
+                    return 'Protein (g)';
+            }
+        };
+
         // Function to display a slide based on the index
         const showSlide = (index) => {
             currentSlide = index;
@@ -185,10 +201,11 @@
                 updateChart(selectedMetric);
                 d3.select('#subtitle').text(slide.subtitle);
                 d3.select('#metric').on('change', function() {
-                    updateChart(this.value);
-                    yLabel.text(this.value === 'Calories' ? 'Calories' : this.value === 'Fat' ? 'Fat (g)' : this.value === 'Carbohydrates' ? 'Carbs (g)' : 'Protein (g)');
+                    const newMetric = this.value;
+                    updateChart(newMetric)
+                    yLabel.text(getYLabel(newMetric));
                 });
-                yLabel.text(selectedMetric === 'Calories' ? 'Calories' : selectedMetric === 'Fat' ? 'Fat (g)' : selectedMetric === 'Carbohydrates' ? 'Carbs (g)' : 'Protein (g)');
+                yLabel.text(getYLabel(selectedMetric));
             } else {
                 updateChart(slide.metric);
                 d3.select('#subtitle').text(slide.subtitle);
@@ -196,6 +213,7 @@
                 d3.select('#metric').on('change', null);
             }
         };
+
         
         // Event listeners for navigation buttons
         d3.select('#prev').on('click', () => {
