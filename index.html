@@ -104,7 +104,7 @@
         
         const x = d3.scaleBand()
             .domain(['Sausage McMuffin', 'McChicken', 'Egg McMuffin', 'Cheeseburger',
-                     'Quarter Pounder', 'Big Mac', 'Filet O Fish'])
+                     'Quarter Pounder', 'BIG MAC', 'Filet O Fish'])
             .range([0, width]).padding(0.1);
 
         const y = d3.scaleLinear().range([height, 0]);
@@ -139,7 +139,8 @@
                 
                 xAxis.call(d3.axisBottom(x).tickSize(2)).selectAll("text")
                     .attr("transform", "translate(-10,0)")
-                    .style("text-anchor", "end");
+                    .style("text-anchor", "middle")
+                    .style("font-size", "16px");
                 yAxis.call(d3.axisLeft(y).tickSize(2));
                 
                 const bars = chart.selectAll('.bar')
