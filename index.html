@@ -116,7 +116,7 @@
         
         const xLabel = chart.append('text')
             .attr('transform', `translate(${width / 2}, ${height + 40})`)
-            .style('font-size', '1em')
+            .style('font-size', '20px')
             .style('text-anchor', 'middle')
             .text("McDonald's Sandwiches");
         
@@ -125,7 +125,7 @@
             .attr('y', 0 - margin.left)
             .attr('x', 0 - (height / 2))
             .attr('dy', '1em')
-            .style('font-size', '1em')
+            .style('font-size', "20px")
             .style('text-anchor', 'middle');
 
         // Function to update the chart based on the selected metric
@@ -140,8 +140,9 @@
                 xAxis.call(d3.axisBottom(x).tickSize(2)).selectAll("text")
                     .attr("transform", "translate(-10,0)")
                     .style("text-anchor", "middle")
-                    .style("font-size", "16px");
-                yAxis.call(d3.axisLeft(y).tickSize(2));
+                    .style("font-size", "14px");
+                yAxis.call(d3.axisLeft(y).tickSize(2)).selectAll("text")
+                    .style("font-size", "14px");
                 
                 const bars = chart.selectAll('.bar')
                     .data(data, d => d.food);
